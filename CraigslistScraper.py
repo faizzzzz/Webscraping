@@ -9,7 +9,8 @@ def findCars():
     maxMiles = str(175000)
 
     # secondPage = "s=120%"
-    pages = [120,240,360,480,600]
+    numCarsPerPage = 120
+    pages = 5
 
     filename = "car_info.csv"
 
@@ -17,8 +18,8 @@ def findCars():
     delPrev.truncate(0)
     delPrev.close()
 
-    for page in pages:
-        myURL = 'https://dallas.craigslist.org/search/cto?' + 's=' + str(page) + '&min_price=' + minPrice + '&max_price=' + maxPrice + '&max_auto_miles=' + maxMiles
+    for page in range(1,(pages + 1)):
+        myURL = 'https://dallas.craigslist.org/search/cto?' + 's=' + str(page*numCarsPerPage) + '&min_price=' + minPrice + '&max_price=' + maxPrice + '&max_auto_miles=' + maxMiles
         req = Request(myURL, headers={'User-Agent':'Mozilla/5.0'})
         uClient = uReq(myURL)
         pageHTML = uClient.read()
@@ -61,12 +62,13 @@ def findCars():
             link = vehicle.a['href']
             completeLink = siteName + link
             cars += 1
+            try:    # This replace the comma from the names. If this is not removed it messes up the excel sheet
+                car_info.write(name.replace(',','|') + "," + vehiclePrice + "," + vehicleLocation.replace(',','|') + "," + timePosted + "," + completeLink + "\n")
+                car_info.close()
+            except: # Some car names don't have commas
+                car_info.write("No name" + "," + vehiclePrice + "," + vehicleLocation.replace(',','|') + "," + timePosted + "," + completeLink + "\n")
+                car_info.close()
 
-            car_info.write(name.replace(',','|') + "," + vehiclePrice + "," + vehicleLocation.replace(',','|') + "," + timePosted + "," + completeLink + "\n")
-            car_info.close()
-
-
-        # car_info.close()
         print("page: " + str(page))
 
 findCars()
