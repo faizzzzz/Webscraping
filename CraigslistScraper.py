@@ -3,20 +3,28 @@ from urllib.request import Request
 from bs4 import BeautifulSoup as soup
 
 
-def findCars():
-    minPrice = str(2500)
-    maxPrice = str(4000)
-    maxMiles = str(175000)
+def findCars(mprice, lprice, miles, pages):
+    minPrice = str(mprice)
+    maxPrice = str(lprice)
+    maxMiles = str(miles)
 
     # secondPage = "s=120%"
     numCarsPerPage = 120
-    pages = 5
 
     filename = "car_info.csv"
-
+    
+    # deleting on the previous file
     delPrev = open(filename, 'w')
     delPrev.truncate(0)
     delPrev.close()
+
+    # writing on the file
+    file = open(filename, 'a')
+    headers = "Name, price, location, time, link\n"
+    # file.write("Search Criteria:\n" + "MinPrice: " + minPrice + "\nMaxPrice: " + maxPrice + "\nMaxMiles: " + maxMiles + "\n\n")
+    file.write(headers)
+    file.close()
+    
 
     for page in range(1,(pages + 1)):
         myURL = 'https://dallas.craigslist.org/search/cto?' + 's=' + str(page*numCarsPerPage) + '&min_price=' + minPrice + '&max_price=' + maxPrice + '&max_auto_miles=' + maxMiles
@@ -30,15 +38,7 @@ def findCars():
         vehicle_list = page_soup.findAll('li', {'class':'result-row'})
 
         cars = 0
-        # Creating a .csv file
-        file = open(filename, 'a')
-
-        headers = "Name, price, location, time, link\n"
-        file.write("Page: " + str(page) + "\n")
-        file.write("Search Criteria:\n" + "MinPrice: " + minPrice + "\nMaxPrice: " + maxPrice + "\nMaxMiles: " + maxMiles + "\n\n")
-        file.write(headers)
-        file.close()
-
+        
         for vehicle in vehicle_list:
             car_info = open(filename, 'a')
             # name
@@ -68,9 +68,10 @@ def findCars():
             except: # Some car names don't have commas
                 car_info.write("No name" + "," + vehiclePrice + "," + vehicleLocation.replace(',','|') + "," + timePosted + "," + completeLink + "\n")
                 car_info.close()
-
+        # car_info.close()
         print("page: " + str(page))
 
-findCars()
+if __name__ == "__main__":
+    findCars(2500, 4000, 175000, 5)
 
 
