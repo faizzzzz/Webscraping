@@ -60,7 +60,7 @@ def findCars(mprice, lprice, miles, pages):
             # link
             siteName = 'https://dallas.craigslist.org/'
             link = vehicle.a['href']
-            completeLink = siteName + link
+            completeLink = link
             cars += 1
             try:    # This replace the comma from the names. If this is not removed it messes up the excel sheet
                 car_info.write(name.replace(',','|') + "," + vehiclePrice + "," + vehicleLocation.replace(',','|') + "," + timePosted + "," + completeLink + "\n")
