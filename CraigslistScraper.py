@@ -3,9 +3,9 @@ from urllib.request import Request
 from bs4 import BeautifulSoup as soup
 
 
-def findCars(mprice, lprice, miles, pages):
-    minPrice = str(mprice)
-    maxPrice = str(lprice)
+def findCars(lprice, mprice, miles, pages):
+    minPrice = str(lprice)
+    maxPrice = str(mprice)
     maxMiles = str(miles)
 
     # secondPage = "s=120%"
@@ -72,6 +72,7 @@ def findCars(mprice, lprice, miles, pages):
         print("page: " + str(page))
 
 if __name__ == "__main__":
-    findCars(2500, 4000, 175000, 5)
+    findCars(2500, 4000, 175000, 5)     # findCars(minPrice, maxPrice, maxMiles, numPages)
+    # one page on craigslist list 120 cars, so 5 pages will list 5*120 = 600 cars.
 
 
